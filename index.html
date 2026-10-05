@@ -86,6 +86,12 @@ body.home header,body.home .wrap{display:none}
 .acts .btn{padding:8px 12px;font-size:15px}
 footer a{color:var(--text)}
 @media print{#back{display:none}}
+#bar{position:sticky;top:0;z-index:10;background:#0A192F;padding:8px 12px}
+body.home #bar{display:none}
+#bar .btn{display:block;width:100%;max-width:760px;margin:0 auto;background:#D4AF37;border-color:#D4AF37;color:#0A192F;font-weight:700;font-size:19px;min-height:52px}
+.how{margin-top:26px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:14px;padding:6px 20px 14px}
+.how h2{font-size:1.5rem;border:0}.how ol{margin:6px 0 0;padding-left:22px}.how li{margin:8px 0}
+@media print{#bar{display:none}}
 </style>
 </head>
 <body>
@@ -96,11 +102,17 @@ footer a{color:var(--text)}
     <p class="sub">Gentle companions to Marie Campbell’s mini books</p>
     <p class="lead2">Choose a checklist, tick it off or write your thoughts online, and save a printable copy if you like. Take what helps, and take your time.</p>
   </div></div>
-  <div class="hwrap"><div id="groups"></div>
+  <div class="hwrap"><div class="how"><h2>How it works</h2><ol>
+<li><b>Choose</b> a checklist below and tap <b>Open checklist</b>.</li>
+<li><b>Tick the boxes</b> or write your thoughts. Your answers stay on your own device.</li>
+<li><b>Keep a copy:</b> tap <b>Save as PDF / Print</b> at the bottom of the checklist.</li>
+<li><b>Choose another:</b> tap the big gold <b>&larr; Back to all checklists</b> bar at the top of the screen, or use the drop-down menu.</li></ol></div>
+<div id="groups"></div>
     <p class="privacy">Your ticks and notes stay on your own device. Nothing is sent anywhere else.</p>
     <footer>Welcome to My Third Act &nbsp;·&nbsp; <b>by Marie Campbell</b><br><a href="https://www.amazon.com/author/mariecampbell" target="_blank" rel="noopener">See all the mini books on Amazon</a></footer>
   </div>
 </div>
+<div id="bar"><button class="btn" id="back" type="button">&larr; Back to all checklists</button></div>
 <header>
   <div class="head">
     <div class="badge" id="badge" aria-hidden="true">Mini Book<br>Companion</div>
@@ -113,7 +125,6 @@ footer a{color:var(--text)}
 </header>
 
 <div class="wrap">
-  <button class="btn alt" id="back" type="button" style="margin-bottom:16px">&larr; All checklists</button>
   <div class="tabs" role="tablist" aria-label="Choose a checklist" id="tabs"></div>
   <main id="panels"></main>
 
@@ -208,7 +219,7 @@ LISTS.forEach(function(L,li){
   h+='<div class="progress" id="pg-'+L.id+'"></div><div class="bar"><i id="br-'+L.id+'"></i></div>';
   h+='<p class="closing">'+esc(L.closing)+'</p>';
   h+='<div class="deeper"><h3>Want to Go Deeper?</h3><p>This checklist is just the beginning. You\u2019ve already taken the first step. The full mini book offers more stories, tools, and encouragement to support your journey.</p><a class="btn alt" href="'+L.link+'" target="_blank" rel="noopener">Find the mini book on Amazon</a></div>';
-  h+='<div class="actions"><button class="btn" type="button" data-print>Save as PDF / Print</button><button class="btn alt" type="button" data-reset="'+L.id+'">Start fresh</button></div>';
+  h+='<div class="actions"><button class="btn" type="button" data-print>Save as PDF / Print</button><button class="btn alt" type="button" data-reset="'+L.id+'">Start fresh</button><button class="btn alt" type="button" data-home>&larr; Back to all checklists</button></div>';
   p.innerHTML=h;panels.appendChild(p);
 });
 function count(id){var L=LISTS.filter(function(x){return x.id===id})[0],n=0;
@@ -233,6 +244,7 @@ panels.addEventListener("input",function(e){var k=e.target.dataset.n;if(!k)retur
   state[k]=state[k]||{};state[k].n=e.target.value;save()});
 panels.addEventListener("click",function(e){
   if(e.target.hasAttribute("data-print")){window.print()}
+  if(e.target.hasAttribute("data-home")){goHome()}
   var r=e.target.dataset.reset;
   if(r&&confirm("Clear all ticks and notes on this checklist?")){
     Object.keys(state).forEach(function(k){if(k.indexOf(r+"-")===0)delete state[k]});save();
